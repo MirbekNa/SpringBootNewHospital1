@@ -45,9 +45,6 @@ private final DepartmentRepository departmentRepository;
 
 
 
-
-
-
     @Override
     public Doctor getDoctorById(Long id) throws MyException {
         Optional<Doctor> doctor = doctorRepository.findById(id);

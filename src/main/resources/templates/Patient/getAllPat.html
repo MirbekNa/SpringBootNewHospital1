@@ -60,7 +60,7 @@
             <p class="card-text" th:text="${patient.getGender()}"></p>
             <p class="card-text" th:text="${patient.getEmail()}"></p>
 
-            <form th:method="DELETE" th:action="@{/patient/{patientId}/patDelete(patientId=${patient.getId()})}">
+            <form th:method="get" th:action="@{/patient/{patientId}/patDelete(patientId=${patient.getId()})}">
                 <button class="btn btn-danger" type="submit">Delete</button>
             </form>
             <form th:method="GET" th:action="@{/patient/{patientId}/patUpdate(patientId=${patient.getId()})}">

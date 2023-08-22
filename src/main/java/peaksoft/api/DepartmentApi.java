@@ -1,7 +1,6 @@
 package peaksoft.api;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -46,15 +45,15 @@ public class DepartmentApi {
     }
     @GetMapping("/{hospitalId}")
     String findAllDepartmentByHospitalId(Model model, @PathVariable Long hospitalId) throws MyException {
-      try {
+        try {
 
 
-        model.addAttribute("hospitalId",hospitalId);
-        model.addAttribute("departments", departmentService.findAll(hospitalId));
-        return "Department/findDepartmentByHospital";
-    }catch (Exception e){
-          throw new MyException("It is error while getting department by hospital id");
-      }
+            model.addAttribute("hospitalId",hospitalId);
+            model.addAttribute("departments", departmentService.findAll(hospitalId));
+            return "Department/findDepartmentByHospital";
+        }catch (Exception e){
+            throw new MyException("It is error while getting department by hospital id");
+        }
     }
 
     @DeleteMapping("{departmentId}/delete")
@@ -80,6 +79,8 @@ public class DepartmentApi {
     @PostMapping("{departmentId}/depEdit")
     public String updateHos(@PathVariable Long departmentId, @ModelAttribute("depUpdate") Department newDepartment) {
         try {
+            Department department = departmentService.getDepartmentById(departmentId);
+            newDepartment.setHospital(department.getHospital());
             departmentService.updateDepartment(departmentId, newDepartment);
         } catch (MyException e) {
             throw new RuntimeException(e);

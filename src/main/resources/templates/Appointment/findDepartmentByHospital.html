@@ -114,7 +114,7 @@
             <p th:text="${app.patient.firstName+' '+app.patient.lastName}"></p>
         </div>
         <div class="btn-container">
-            <form th:method="delete"
+            <form th:method="get"
                   th:action="@{/appointments/{hospitalId}/{appointmentId}/delete(hospitalId=${hospitalId},appointmentId=${app.getId()})}">
                 <input type="submit" th:value="Delete"/>
             </form>

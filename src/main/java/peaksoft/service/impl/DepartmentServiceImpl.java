@@ -25,6 +25,7 @@ public class DepartmentServiceImpl implements DepartmentService {
     public void saveDepartment(Department department, Long hospitalId) throws MyException {
         try {
             Hospital hospital = hospitalService.getHospitalById(hospitalId);
+            department.setHospital(hospital);
             departmentRepository.save(department);
         } catch (Exception e) {
             throw new MyException("Error while saving department", e);

@@ -76,7 +76,7 @@
                     <h5 class="card-title" th:text="${hospital.getName()}">Hospital</h5>
                     <p class="card-text" th:text="${hospital.getAddress()}">Address</p>
                     <div class="d-grid gap-2">
-                        <form th:method="DELETE" th:action="@{/hospital/{hospitalId}/delete(hospitalId=${hospital.getId()})}">
+                        <form th:method="get" th:action="@{/hospital/{hospitalId}/delete(hospitalId=${hospital.getId()})}">
                             <button type="submit" class="btn btn-danger btn-animated">Delete</button>
                         </form>
                         <form th:method="GET" th:action="@{/hospital/{hospitalId}/newUpdate(hospitalId=${hospital.getId()})}">

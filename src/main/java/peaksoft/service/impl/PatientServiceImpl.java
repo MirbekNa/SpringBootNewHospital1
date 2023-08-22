@@ -2,6 +2,7 @@ package peaksoft.service.impl;
 
 import jakarta.transaction.Transactional;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import peaksoft.entity.Department;
 import peaksoft.entity.Hospital;
@@ -19,16 +20,13 @@ import java.util.Optional;
 
 @Service
 @Transactional
+@RequiredArgsConstructor
 public class PatientServiceImpl implements PatientService {
 
     private final PatientRepository patientRepository;
     private final HospitalService hospitalService;
 
-    @Autowired
-    public PatientServiceImpl(PatientRepository patientRepository, HospitalService hospitalService) {
-        this.patientRepository = patientRepository;
-        this.hospitalService = hospitalService;
-    }
+
 
     @Override
     public void savePatient(Patient patient, Long hospitalId) throws MyException {
