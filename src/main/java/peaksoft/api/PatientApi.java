@@ -6,6 +6,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import peaksoft.entity.Patient;
 import peaksoft.exceptions.MyException;
+import peaksoft.service.HospitalService;
 import peaksoft.service.PatientService;
 
 @Controller
@@ -13,7 +14,7 @@ import peaksoft.service.PatientService;
 @RequiredArgsConstructor
 
 public class PatientApi {
-
+private final HospitalService hospitalService;
     private final PatientService patientService;
 
     @GetMapping()
@@ -49,11 +50,12 @@ public class PatientApi {
         return "Patient/findDepartmentByHospital";
     }
 
-    @DeleteMapping("{patientId}/patDelete")
+    @GetMapping("{patientId}/patDelete")
     String deleteHospital(@PathVariable("patientId") Long id ) throws MyException {
         patientService.deletePatient(id);
         return "redirect:/patient";
     }
+
 
     @GetMapping("{patientId}/patUpdate")
     public String newUpdate(@PathVariable Long patientId, Model model) {

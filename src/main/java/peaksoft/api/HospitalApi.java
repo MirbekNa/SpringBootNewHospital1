@@ -34,7 +34,7 @@ public class HospitalApi {
         return "redirect:/hospital";
     }
 
-    @DeleteMapping("{hospitalId}/delete")
+    @GetMapping("{hospitalId}/delete")
     String deleteHospital(@PathVariable("hospitalId") Long id ) throws MyException {
         hospitalService.deleteHospital(id);
         return "redirect:/hospital";

@@ -11,6 +11,7 @@ import java.util.List;
 @Entity
 @Table(name = "departments")
 public class Department {
+
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "department_gen")
     @SequenceGenerator(name = "department_gen", sequenceName = "department_seq", allocationSize = 1)
@@ -34,4 +35,5 @@ public class Department {
             doctors=new ArrayList<>();
         }else doctors.add(doctor);
     }
+
 }

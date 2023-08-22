@@ -11,6 +11,7 @@ import java.util.List;
 @Entity
 @Table(name = "hospitals")
 public class Hospital {
+
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "hospital_gen")
     @SequenceGenerator(name = "hospital_gen", sequenceName = "hospital_seq", allocationSize = 1)

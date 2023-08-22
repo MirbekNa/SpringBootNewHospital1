@@ -52,7 +52,7 @@
         <div class="card-body">
             <p class="card-text" th:text="${department.getName()}"></p>
 
-            <form th:method="DELETE" th:action="@{/department/{departmentId}/delete(departmentId=${department.getId()})}">
+            <form th:method="get" th:action="@{/department/{departmentId}/delete(departmentId=${department.getId()})}">
                 <button class="btn btn-danger" type="submit">Delete</button>
             </form>
             <form th:method="GET" th:action="@{/department/{departmentId}/depUpdate(departmentId=${department.getId()})}">
