@@ -46,11 +46,7 @@ public class DoctorApi {
     }
 
 
-//    @PostMapping("/accept/{doctorId}")
-//    String assign(@PathVariable Long doctorId, Long departmentId){
-//        doctorService.assign(doctorId, departmentId);
-//        return "redirect:/doctor/"+departmentId;
-//    }
+
 
     @RequestMapping (value = "/save/{hospitalId}", method = RequestMethod.POST)
     String saveDepartment(@PathVariable Long hospitalId, @ModelAttribute Doctor doctor){
@@ -61,14 +57,14 @@ public class DoctorApi {
         }
         return "redirect:/doctor/"+hospitalId;
     }
-//    @GetMapping("/{hospitalId}")
-//    String findAllDepartmentByHospitalId(Model model, @PathVariable Long hospitalId){
-//        model.addAttribute("hospitalId",hospitalId);
-//        model.addAttribute("doctors", doctorService.findAll(hospitalId));
-//        return "Doctor/findDoctorByHospital";
-//    }
+    @GetMapping("/{hospitalId}")
+    String findAllDepartmentByHospitalId(Model model, @PathVariable Long hospitalId) throws MyException {
+        model.addAttribute("hospitalId",hospitalId);
+        model.addAttribute("doctors", doctorService.findAll(hospitalId));
+        return "Doctor/findDoctorByHospital";
+    }
 
-    @DeleteMapping("{doctorId}/docDelete")
+    @GetMapping("{doctorId}/docDelete")
     String deleteHospital(@PathVariable("doctorId") Long id ){
         try {
             doctorService.deleteDoctor(id);

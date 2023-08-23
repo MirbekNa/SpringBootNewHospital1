@@ -5,8 +5,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import peaksoft.entity.Department;
 import peaksoft.entity.Doctor;
+import peaksoft.entity.Hospital;
 import peaksoft.exceptions.MyException;
 import peaksoft.repository.DepartmentRepository;
+import peaksoft.repository.HospitalRepository;
 import peaksoft.service.DepartmentService;
 import peaksoft.service.DoctorService;
 
@@ -23,21 +25,20 @@ import java.util.Optional;
 @RequiredArgsConstructor
 @Transactional
 public class DoctorServiceImpl implements DoctorService {
-private final DepartmentRepository departmentRepository;
     private final DoctorRepository doctorRepository;
-    private final DepartmentService departmentService;
     private final HospitalService hospitalService;
+    private final HospitalRepository hospitalRepository;
 
 
     @Override
-    public void saveDoctor(Doctor doctor, Long departmentId) throws MyException {
+    public void saveDoctor(Doctor doctor, Long hospitalId) throws MyException {
         try {
-            Department department = departmentService.getDepartmentById(departmentId);
-            doctor.setDepartments((List<Department>) department);
+            Hospital hospital = hospitalService.getHospitalById(hospitalId);
+            List<Doctor> hospitalDoctors = hospital.getDoctors();
+            hospitalDoctors.add(doctor);
+            doctor.setHospital(hospital);
             doctorRepository.save(doctor);
-            List<Doctor> departmentDoctors = department.getDoctors();
-            departmentDoctors.add(doctor);
-            departmentRepository.save(department);
+            hospitalRepository.save(hospital);
         } catch (Exception e) {
             throw new MyException("Error while saving doctor", e);
         }
@@ -84,11 +85,13 @@ private final DepartmentRepository departmentRepository;
         try {
             hospitalService.getHospitalById(hospitalId);
 
-            return doctorRepository.findDoctorByHospitalId(hospitalId);
+            return doctorRepository.findDoctorsByHospitalId(hospitalId);
         } catch (Exception e) {
             throw new MyException("Error while getting doctors by hospital", e);
         }
     }
+
+
 
 }
 

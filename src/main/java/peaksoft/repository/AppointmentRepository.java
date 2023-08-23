@@ -12,7 +12,7 @@ public interface AppointmentRepository extends JpaRepository<Appointment,Long> {
     @Query("select h from Hospital l " +
             "join l.appointments h where l.id=:id " +
             "order by h.id desc")
-    List<Appointment> findAppointmentByHospitalId(Long id);
+    List<Appointment> findAppointmentsByHospitalId(Long id);
 
 }
 

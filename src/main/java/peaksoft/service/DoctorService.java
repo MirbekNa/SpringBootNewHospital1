@@ -13,4 +13,5 @@ public interface DoctorService {
     void updateDoctor(Long id, Doctor updatedDoctor)throws MyException;
     void deleteDoctor(Long id)throws MyException;
     List<Doctor>findAll(Long hospitalId) throws MyException;
+
 }
