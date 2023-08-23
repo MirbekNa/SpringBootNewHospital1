@@ -25,10 +25,11 @@ import java.util.Optional;
 @RequiredArgsConstructor
 @Transactional
 public class DoctorServiceImpl implements DoctorService {
+
     private final DoctorRepository doctorRepository;
     private final HospitalService hospitalService;
     private final HospitalRepository hospitalRepository;
-
+private final DepartmentRepository departmentRepository;
 
     @Override
     public void saveDoctor(Doctor doctor, Long hospitalId) throws MyException {
@@ -89,6 +90,18 @@ public class DoctorServiceImpl implements DoctorService {
         } catch (Exception e) {
             throw new MyException("Error while getting doctors by hospital", e);
         }
+    }
+
+    @Override
+    public void assign(Long doctorId, Long departmentId) throws MyException {
+        Doctor doctor = doctorRepository.findById(doctorId)
+                .orElseThrow(() -> new MyException("Doctor not found with id: " + doctorId));
+
+        Department department = departmentRepository.findById(departmentId)
+                .orElseThrow(() -> new MyException("Department not found with id: " + departmentId));
+
+        doctor.setDepartments((List<Department>) department);
+        doctorRepository.save(doctor);
     }
 
 

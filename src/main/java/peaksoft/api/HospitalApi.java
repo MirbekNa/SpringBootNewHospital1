@@ -1,5 +1,6 @@
 package peaksoft.api;
 
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 
@@ -15,7 +16,6 @@ import peaksoft.service.HospitalService;
 @RequestMapping("/hospital")
 @RequiredArgsConstructor
 public class HospitalApi {
-
     private final HospitalService hospitalService;
     @GetMapping
     public String getAllCompanies(Model model) throws MyException {
@@ -52,5 +52,4 @@ public class HospitalApi {
         hospitalService.updateHospital(hospitalId, newhospital);
         return "redirect:/hospital";
     }
-
 }

@@ -58,10 +58,10 @@ public class AppointmentApi {
         return "Appointment/findDepartmentByHospital";
     }
 
-    @DeleteMapping("/{hospitalId}/{appointmentId}/delete")
-    public String deleteById(@PathVariable Long hospitalId, @PathVariable Long appointmentId) {
+    @GetMapping("/{hospitalId}/{appointmentId}/delete")
+    public String deleteById(@PathVariable Long hospitalId) {
         try {
-            appointmentService.deleteAppointment(appointmentId);
+            appointmentService.deleteAppointment(hospitalId);
         } catch (MyException e) {
             throw new RuntimeException(e);
         }

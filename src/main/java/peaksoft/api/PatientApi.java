@@ -6,15 +6,13 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import peaksoft.entity.Patient;
 import peaksoft.exceptions.MyException;
-import peaksoft.service.HospitalService;
 import peaksoft.service.PatientService;
 
 @Controller
 @RequestMapping("/patient")
 @RequiredArgsConstructor
-
 public class PatientApi {
-private final HospitalService hospitalService;
+
     private final PatientService patientService;
 
     @GetMapping()
@@ -55,7 +53,6 @@ private final HospitalService hospitalService;
         patientService.deletePatient(id);
         return "redirect:/patient";
     }
-
 
     @GetMapping("{patientId}/patUpdate")
     public String newUpdate(@PathVariable Long patientId, Model model) {
