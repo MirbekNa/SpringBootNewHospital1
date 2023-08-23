@@ -78,7 +78,7 @@ public class PatientServiceImpl implements PatientService {
     public List<Patient> findAll(Long hospitalId) throws MyException {
         try {
             hospitalService.getHospitalById(hospitalId);
-            return patientRepository.findPatientByHospitalId(hospitalId);
+            return patientRepository.findPatientsByHospitalId(hospitalId);
         } catch (Exception e) {
             throw new MyException("Error while getting patients by hospital", e);
         }

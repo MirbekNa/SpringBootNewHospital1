@@ -52,4 +52,5 @@ public class HospitalApi {
         hospitalService.updateHospital(hospitalId, newhospital);
         return "redirect:/hospital";
     }
+
 }

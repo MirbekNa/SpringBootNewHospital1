@@ -7,6 +7,6 @@ import peaksoft.entity.Patient;
 import java.util.List;
 @Repository
 public interface PatientRepository extends JpaRepository<Patient,Long> {
-    List<Patient> findPatientByHospitalId(Long id);
+    List<Patient> findPatientsByHospitalId(Long id);
 
 }

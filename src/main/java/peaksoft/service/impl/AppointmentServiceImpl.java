@@ -4,8 +4,10 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import peaksoft.entity.Appointment;
+import peaksoft.entity.Hospital;
 import peaksoft.exceptions.MyException;
 import peaksoft.repository.AppointmentRepository;
+import peaksoft.repository.HospitalRepository;
 import peaksoft.service.AppointmentService;
 
 import java.util.List;
@@ -17,15 +19,26 @@ import java.util.Optional;
 public class AppointmentServiceImpl implements AppointmentService {
     private final AppointmentRepository appointmentRepository;
     private final HospitalServiceImpl hospitalService;
+private final HospitalRepository hospitalRepository;
 
-    @Override
-    public void saveAppointment(Appointment appointment) throws MyException {
+@Override
+    public void saveAppointment(Appointment appointment, Long hospitalId) throws MyException {
+        Hospital hospital = hospitalRepository.findById(hospitalId).orElse(null); // Замените на ваш репозиторий для Hospital
+        if (hospital == null) {
+            throw new MyException("Hospital not found with ID: " + hospitalId);
+        }
+
+        List<Appointment> hospitalAppointments = hospital.getAppointments();
+        hospitalAppointments.add(appointment);
+        hospitalRepository.save(hospital);
+
         try {
             appointmentRepository.save(appointment);
         } catch (Exception e) {
             throw new MyException("Error while saving appointment");
         }
     }
+
 
     @Override
     public Appointment getAppointmentById(Long id) throws MyException {
@@ -65,7 +78,7 @@ public class AppointmentServiceImpl implements AppointmentService {
     public List<Appointment> findAll(Long hospitalId) throws MyException {
         try {
             hospitalService.getHospitalById(hospitalId);
-            return appointmentRepository.findAppointmentByHospitalId(hospitalId);
+            return appointmentRepository.findAppointmentsByHospitalId(hospitalId);
         } catch (Exception e) {
             throw new MyException("It is error while getting appointment by hospital id");
         }

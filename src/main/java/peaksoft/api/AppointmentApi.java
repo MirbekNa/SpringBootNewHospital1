@@ -1,61 +1,94 @@
 package peaksoft.api;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import peaksoft.entity.Appointment;
 import peaksoft.exceptions.MyException;
 import peaksoft.service.AppointmentService;
-
-import java.util.List;
+import peaksoft.service.DepartmentService;
+import peaksoft.service.DoctorService;
+import peaksoft.service.PatientService;
 
 @Controller
-@RequestMapping("/appointments")
+@RequestMapping("/appointment")
 @RequiredArgsConstructor
+
 public class AppointmentApi {
-
     private final AppointmentService appointmentService;
+    private final PatientService patientService;
+    private final DoctorService doctorService;
+    private final DepartmentService departmentService;
 
-    @GetMapping("/appointments")
-    public List<Appointment> getAllAppointments() throws MyException {
-        return appointmentService.getAllAppointments();
-    }
-
-    @GetMapping("/appointments/{id}")
-    public Appointment getAppointmentById(@PathVariable Long id) throws MyException {
-        return appointmentService.getAppointmentById(id);
-    }
-
-    @PostMapping("/appointments")
-    public ResponseEntity<String> saveAppointment(@RequestBody Appointment appointment) {
+    @GetMapping()
+    String getAllApp(Model model) {
         try {
-            appointmentService.saveAppointment(appointment);
-            return ResponseEntity.ok("Appointment saved successfully");
+            model.addAttribute("allAppointments", appointmentService.getAllAppointments());
         } catch (MyException e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error saving appointment");
+            throw new RuntimeException(e);
         }
+        return "Appointment/getAllApp";
     }
 
-    @PutMapping("/appointments/{id}")
-    public ResponseEntity<String> updateAppointment(@PathVariable Long id, @RequestBody Appointment updatedAppointment) {
+    @GetMapping("/create/{hospitalId}")
+    String createAppointmentByHospitalId(@PathVariable Long hospitalId, Model model) throws MyException {
+        model.addAttribute("newAppointment", new Appointment());
+        model.addAttribute("allDepartments",departmentService.findAll(hospitalId));
+        model.addAttribute("allPatients",patientService.findAll(hospitalId));
+        model.addAttribute("allDoctors",doctorService.findAll(hospitalId));
+        model.addAttribute(hospitalId);
+        return "Appointment/save-page";
+    }
+
+    @RequestMapping(value = "/save/{hospitalId}", method = RequestMethod.POST)
+    String saveAppointment(@PathVariable Long hospitalId, @ModelAttribute("newAppointment") Appointment appointment) {
         try {
-            appointmentService.updateAppointment(id, updatedAppointment);
-            return ResponseEntity.ok("Appointment updated successfully");
+            appointmentService.saveAppointment(appointment, hospitalId);
         } catch (MyException e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error updating appointment");
+            throw new RuntimeException(e);
         }
+        return "redirect:/appointment/" + hospitalId;
     }
 
-    @DeleteMapping("/appointments/{id}")
-    public ResponseEntity<String> deleteAppointment(@PathVariable Long id) {
+    @GetMapping("/{hospitalId}")
+    String findAllDepartmentByHospitalId(Model model, @PathVariable Long hospitalId) throws MyException {
+        model.addAttribute("hospitalId", hospitalId);
+        model.addAttribute("appointments", appointmentService.findAll(hospitalId));
+        return "Appointment/findDepartmentByHospital";
+    }
+
+    @DeleteMapping("/{hospitalId}/{appointmentId}/delete")
+    public String deleteById(@PathVariable Long hospitalId, @PathVariable Long appointmentId) {
         try {
-            appointmentService.deleteAppointment(id);
-            return ResponseEntity.ok("Appointment deleted successfully");
+            appointmentService.deleteAppointment(appointmentId);
         } catch (MyException e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error deleting appointment");
+            throw new RuntimeException(e);
         }
+        return "redirect:/appointments/"+hospitalId;
     }
 
+    @GetMapping("{hospitalId}/{appointmentId}/edit")
+    public String newUpdate(@PathVariable Long appointmentId,@PathVariable Long hospitalId, Model model) {
+        try {
+            model.addAttribute("appUpdate",appointmentService.getAppointmentById(appointmentId));
+            model.addAttribute("departments",departmentService.findAll(hospitalId));
+            model.addAttribute("doctors",doctorService.findAll(hospitalId));
+            model.addAttribute("patients",patientService.findAll(hospitalId));
+            model.addAttribute("hospitalId", hospitalId);
+        } catch (MyException e) {
+            throw new RuntimeException(e);
+        }
+        return "Appointment/appUpdate";
+    }
+
+    @PutMapping("/{hospitalId}/{appointmentId}/update")
+    public String update(@PathVariable Long hospitalId, @PathVariable Long appointmentId, @ModelAttribute("appointment") Appointment appointment) {
+        try {
+            appointmentService.updateAppointment(appointmentId, appointment);
+        } catch (MyException e) {
+            throw new RuntimeException(e);
+        }
+        return "redirect:/appointments/" + hospitalId;
+    }
 }

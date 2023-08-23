@@ -7,7 +7,9 @@ import org.springframework.web.bind.annotation.*;
 import peaksoft.entity.Department;
 import peaksoft.exceptions.MyException;
 
+import peaksoft.repository.DoctorRepository;
 import peaksoft.service.DepartmentService;
+import peaksoft.service.DoctorService;
 
 @Controller
 @RequestMapping("/department")
@@ -16,16 +18,23 @@ import peaksoft.service.DepartmentService;
 public class DepartmentApi {
 
     private final DepartmentService departmentService;
-
+private final DoctorService doctorService;
+private final DoctorRepository doctorRepository;
     @GetMapping()
-    String findAll(Model model){
+    String findAll(Model model) {
         try {
             model.addAttribute("alldepartments", departmentService.getAllDepartments());
-        } catch ( MyException e) {
+        } catch (MyException e) {
             throw new RuntimeException(e);
         }
         return "Department/getAllDep";
     }
+    @PostMapping("/assign")
+    public String assignDoctorToDepartment(@RequestParam Long doctorId, @RequestParam Long departmentId) throws MyException {
+        departmentService.assign(doctorId, departmentId);
+        return "redirect:/department";
+    }
+
 
     @GetMapping("/create/{hospitalId}")
     String createDepartmentByHospitalId(@PathVariable Long hospitalId, Model model){
@@ -55,15 +64,14 @@ public class DepartmentApi {
             throw new MyException("It is error while getting department by hospital id");
         }
     }
-
-    @DeleteMapping("{departmentId}/delete")
-    String deletedep(@PathVariable("departmentId") Long id ){
+    @DeleteMapping("/departments/{departmentId}/delete")
+    public String deletedep(@PathVariable Long departmentId) {
         try {
-            departmentService.deleteDepartment(id);
+            departmentService.deleteDepartment(departmentId);
         } catch (MyException e) {
             throw new RuntimeException(e);
         }
-        return "redirect:/department";
+        return "redirect:/departments";
     }
 
     @GetMapping("{departmentId}/depUpdate")
