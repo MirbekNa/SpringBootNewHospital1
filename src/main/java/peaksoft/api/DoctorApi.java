@@ -46,7 +46,11 @@ public class DoctorApi {
     }
 
 
-
+    @PostMapping("/accept/{doctorId}")
+    String assign(@PathVariable Long doctorId, Long departmentId) throws MyException {
+        doctorService.assign(doctorId, departmentId);
+        return "redirect:/doctor/"+departmentId;
+    }
 
     @RequestMapping (value = "/save/{hospitalId}", method = RequestMethod.POST)
     String saveDepartment(@PathVariable Long hospitalId, @ModelAttribute Doctor doctor){
